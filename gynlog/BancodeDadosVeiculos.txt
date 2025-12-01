@@ -1,0 +1,24 @@
+ID: 1
+Tipo: Chevrolet
+Modelo: Camaro
+Placa: QIEUXN7
+Ano: 2019
+Status: Inativo
+========================================
+
+ID: 2
+Tipo: Fiat
+Modelo: Uno
+Placa: QIEUXN78
+Ano: 2019
+Status: Ativo
+========================================
+
+ID: 3
+Tipo: BMW
+Modelo: X1
+Placa: QIEUXN79
+Ano: 2018
+Status: Ativo
+========================================
+

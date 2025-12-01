@@ -1,0 +1,52 @@
+ID: 1
+Tipo: Chevrolet
+Modelo: Camaro
+Placa: QIEUXN7
+Ano: 2019
+Status: Inativo
+========================================
+Despesa:
+Tipo: 3
+Descrição: IPVA
+Data: 01/12/2025
+Valor: 100.0
+
+ID: 2
+Tipo: Fiat
+Modelo: Uno
+Placa: QIEUXN78
+Ano: 2019
+Status: Ativo
+========================================
+Despesa:
+Tipo: 3
+Descrição: IPVA
+Data: 01/12/2025
+Valor: 200.0
+
+ID: 3
+Tipo: BMW
+Modelo: X1
+Placa: QIEUXN79
+Ano: 2018
+Status: Ativo
+========================================
+Despesa:
+Tipo: 3
+Descrição: IPVA
+Data: 01/12/2025
+Valor: 300.0
+
+ID: 1
+Tipo: Chevrolet
+Modelo: Camaro
+Placa: QIEUXN7
+Ano: 2019
+Status: Inativo
+========================================
+Despesa:
+Tipo: 1
+Descrição: Posto Ipiranga
+Data: 01/05/2025
+Valor: 150.0
+
