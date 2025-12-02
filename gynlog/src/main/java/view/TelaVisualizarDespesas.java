@@ -45,6 +45,7 @@ public class TelaVisualizarDespesas extends javax.swing.JFrame {
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
+        btnVoltar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -101,6 +102,13 @@ public class TelaVisualizarDespesas extends javax.swing.JFrame {
             }
         });
 
+        btnVoltar.setText("Voltar");
+        btnVoltar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVoltarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -125,6 +133,10 @@ public class TelaVisualizarDespesas extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 87, Short.MAX_VALUE)
                 .addComponent(jButton4)
                 .addGap(22, 22, 22))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(btnVoltar)
+                .addGap(53, 53, 53))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -141,10 +153,13 @@ public class TelaVisualizarDespesas extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton3)
                     .addComponent(btnGerar))
-                .addContainerGap(63, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnVoltar)
+                .addContainerGap(34, Short.MAX_VALUE))
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnGerarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGerarActionPerformed
@@ -200,61 +215,39 @@ public class TelaVisualizarDespesas extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         try {
-        // solicitar mês e ano via JOptionPane (continua igual)
-        String mesStr = JOptionPane.showInputDialog(this, "Digite o MÊS (1-12):");
-        String anoStr = JOptionPane.showInputDialog(this, "Digite o ANO (ex: 2025):");
+        String anoStr = JOptionPane.showInputDialog(this, "Ano (ex: 2025):");
+        if (anoStr == null) return;
 
-        if (mesStr == null || anoStr == null) return; // cancelado
-
-        int mes = Integer.parseInt(mesStr.trim());
         int ano = Integer.parseInt(anoStr.trim());
 
         MovimentacaoDAO dao = new MovimentacaoDAO();
-        double total = dao.somatorioDespesasPorMes(mes, ano);
+        double total = dao.somatorioIPVAporAno(ano);
 
-        // formatação em moeda
         java.text.NumberFormat nf =
-                java.text.NumberFormat.getCurrencyInstance(new java.util.Locale("pt", "BR"));
+                java.text.NumberFormat.getCurrencyInstance(new java.util.Locale("pt","BR"));
 
-        // LIMPA o txtArea
-        txtArea.setText("");
+        String msg = "Somatório de IPVA da frota no ano " + ano + ":\n\n" +
+                     nf.format(total);
 
-        // ESCREVE no txtArea
-        txtArea.append("===== RELATÓRIO DE DESPESAS DO MÊS =====\n\n");
-        txtArea.append("Período pesquisado: " + String.format("%02d/%d", mes, ano) + "\n");
-        txtArea.append("---------------------------------------------\n");
-        txtArea.append("Total de despesas da frota: " + nf.format(total) + "\n");
+        txtArea.setText(msg);
 
-    } catch (NumberFormatException e) {
-        JOptionPane.showMessageDialog(this, "Erro: mês ou ano inválidos!");
+    } catch (NumberFormatException nfe) {
+        JOptionPane.showMessageDialog(this, "Ano inválido!");
     }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         try {
-    String idStr = JOptionPane.showInputDialog(this, "ID do veículo:");
-    String anoStr = JOptionPane.showInputDialog(this, "Ano (ex: 2025):");
-    if (idStr == null || anoStr == null) return;
+        int mes = Integer.parseInt(JOptionPane.showInputDialog(this, "Mês (1-12):"));
+        int ano = Integer.parseInt(JOptionPane.showInputDialog(this, "Ano (ex: 2025):"));
 
-    int idVeiculo = Integer.parseInt(idStr.trim());
-    int ano = Integer.parseInt(anoStr.trim());
+        MovimentacaoDAO dao = new MovimentacaoDAO();
+        String resultado = dao.listarMultasPorMes(mes, ano);
 
-    MovimentacaoDAO dao = new MovimentacaoDAO();
-    double total = dao.somatorioMultasPorVeiculoEAno(idVeiculo, ano);
+        txtArea.setText(resultado);
 
-    java.text.NumberFormat nf =
-        java.text.NumberFormat.getCurrencyInstance(new java.util.Locale("pt", "BR"));
-
-    txtArea.setText(""); // limpar antes
-
-    txtArea.append("===== MULTAS PAGAS DO VEÍCULO =====\n\n");
-    txtArea.append("Veículo ID: " + idVeiculo + "\n");
-    txtArea.append("Ano: " + ano + "\n");
-    txtArea.append("-------------------------------------------\n");
-    txtArea.append("Total de multas pagas: " + nf.format(total) + "\n");
-
-} catch (NumberFormatException nfe) {
-    JOptionPane.showMessageDialog(this, "Valores inválidos.");
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Dados inválidos!");
 }
     }//GEN-LAST:event_jButton3ActionPerformed
 
@@ -266,27 +259,16 @@ public class TelaVisualizarDespesas extends javax.swing.JFrame {
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         try {
-        String mesStr = JOptionPane.showInputDialog(this, "Mês (1-12):");
-        String anoStr = JOptionPane.showInputDialog(this, "Ano (ex: 2025):");
-
-        if (mesStr == null || anoStr == null) return;
-
-        int mes = Integer.parseInt(mesStr.trim());
-        int ano = Integer.parseInt(anoStr.trim());
+        int mes = Integer.parseInt(JOptionPane.showInputDialog(this, "Mês (1-12):"));
+        int ano = Integer.parseInt(JOptionPane.showInputDialog(this, "Ano (ex: 2025):"));
 
         MovimentacaoDAO dao = new MovimentacaoDAO();
-        double total = dao.totalCombustivelMes(mes, ano);
+        String resultado = dao.listarDespesasCombustivelPorMes(mes, ano);
 
-        java.text.NumberFormat nf = java.text.NumberFormat.getCurrencyInstance(new java.util.Locale("pt", "BR"));
-
-        txtArea.setText(
-            "=== Total gasto com Combustível ===\n" +
-            "Mês/Ano: " + String.format("%02d/%d", mes, ano) + "\n" +
-            "Total: " + nf.format(total)
-        );
+        txtArea.setText(resultado);
 
     } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, "Erro ao processar.");
+        JOptionPane.showMessageDialog(this, "Dados inválidos!");
     }
     }//GEN-LAST:event_jButton5ActionPerformed
 
@@ -303,6 +285,12 @@ public class TelaVisualizarDespesas extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, "ID inválido.");
     }
     }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void btnVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltarActionPerformed
+        MainFrame mf = new MainFrame();
+        mf.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnVoltarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -331,6 +319,7 @@ public class TelaVisualizarDespesas extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnGerar;
+    private javax.swing.JButton btnVoltar;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;

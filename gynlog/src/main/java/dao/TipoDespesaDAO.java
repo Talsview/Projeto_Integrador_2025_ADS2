@@ -9,9 +9,7 @@ public class TipoDespesaDAO {
 
     private static final String ARQUIVO = "TipoDespesaBD.txt";
 
-    // =====================================================
-    //   SALVAR NOVO TIPO DE DESPESA
-    // =====================================================
+    // Salvar novo tipo
     public void save(TipoDespesa t) {
 
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(ARQUIVO, true))) {
@@ -28,9 +26,7 @@ public class TipoDespesaDAO {
         }
     }
 
-    // =====================================================
-    //   GERAR PRÓXIMO ID AUTOMÁTICO
-    // =====================================================
+    // Gerar próximo ID
     public int gerarNovoId() {
         int maior = 0;
 
@@ -46,15 +42,13 @@ public class TipoDespesaDAO {
             }
 
         } catch (Exception e) {
-            // arquivo pode não existir ainda
+            // arquivo ainda não existe
         }
 
         return maior + 1;
     }
 
-    // =====================================================
-    //   LISTAR TODOS DO ARQUIVO
-    // =====================================================
+    // Listar todos
     public List<TipoDespesa> listarTodos() {
 
         List<TipoDespesa> lista = new ArrayList<>();
@@ -82,7 +76,7 @@ public class TipoDespesaDAO {
             }
 
         } catch (Exception e) {
-            // arquivo pode não existir ainda
+            // arquivo não encontrado
         }
 
         return lista;

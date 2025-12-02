@@ -16,12 +16,10 @@ public class TelaDespesas extends javax.swing.JFrame {
 
     public TelaDespesas() {
         initComponents();
-        carregarTiposFixos();      // substitui o model gerado pela IDE
+        carregarTiposFixos(); // substitui o modelo gerado pela IDE
     }
 
-    // ======================================================
-    //   CARREGA TIPOS FIXOS SEM ERRO DE GENERICS
-    // ======================================================
+    // Carrega tipos fixos no combo
     private void carregarTiposFixos() {
 
         // Criando um model do tipo correto (TipoDespesa)
@@ -35,24 +33,8 @@ public class TelaDespesas extends javax.swing.JFrame {
 
         comboTipo.setModel(modelo); // Substitui o model errado gerado pelo NetBeans
     }
-
-    // ======================================================
-    //   (Opcional) Carregar do TXT via DAO
-    // ======================================================
-    private void carregarComboTipos() {
-        TipoDespesaDAO dao = new TipoDespesaDAO();
-
-        javax.swing.DefaultComboBoxModel<TipoDespesa> modelo =
-                new javax.swing.DefaultComboBoxModel<>();
-
-        for (TipoDespesa t : dao.listarTodos()) {
-            modelo.addElement(t);
-        }
-
-        comboTipo.setModel(modelo);
-    }
-
     
+    // Lê o bloco completo do veículo no TXT
     private String lerBlocoVeiculo(int idProcurado) {
 
     StringBuilder bloco = new StringBuilder();
@@ -88,9 +70,8 @@ public class TelaDespesas extends javax.swing.JFrame {
 
     return bloco.toString().trim().isEmpty() ? null : bloco.toString();
 }
-    // ======================================================
-    //   BUSCAR VEÍCULO NO TXT
-    // ======================================================
+
+    // Busca um veículo específico no TXT
     private Veiculo buscarVeiculoPorId(int idProcurado) {
 
     Veiculo v = null;
@@ -155,6 +136,17 @@ public class TelaDespesas extends javax.swing.JFrame {
 
     return null;
 }
+    // Valida data no formato dd/MM/yyyy
+    private boolean dataValida(String data) {
+    try {
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
+        sdf.setLenient(false);
+        sdf.parse(data);
+        return true;
+    } catch (Exception e) {
+        return false;
+    }
+}
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -170,6 +162,7 @@ public class TelaDespesas extends javax.swing.JFrame {
         txtDescricao = new javax.swing.JTextField();
         txtData = new javax.swing.JTextField();
         txtValor = new javax.swing.JTextField();
+        btnVoltar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -192,6 +185,13 @@ public class TelaDespesas extends javax.swing.JFrame {
 
         comboTipo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Combustível", "Manutenção", "IPVA", "Multa" }));
 
+        btnVoltar.setText("Voltar");
+        btnVoltar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVoltarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -199,25 +199,31 @@ public class TelaDespesas extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(32, 32, 32)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(jLabel5)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(txtValor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel1)
-                                .addComponent(jLabel2))
-                            .addGap(63, 63, 63)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(comboTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(txtIdVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(txtDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(txtData, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addComponent(btnSalvar)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel4))
-                .addContainerGap(370, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(jLabel5)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(txtValor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel1)
+                                        .addComponent(jLabel2))
+                                    .addGap(63, 63, 63)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(comboTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(txtIdVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(txtDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(txtData, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel4))
+                        .addContainerGap(370, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnSalvar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnVoltar)
+                        .addGap(110, 110, 110))))
         );
 
         layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {comboTipo, txtData, txtDescricao, txtIdVeiculo, txtValor});
@@ -226,27 +232,30 @@ public class TelaDespesas extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(27, 27, 27)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(txtIdVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(28, 28, 28)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(comboTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(25, 25, 25)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(txtDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(25, 25, 25)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(txtData, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(27, 27, 27)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(txtValor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(107, 107, 107)
-                .addComponent(btnSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnVoltar)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(txtIdVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(28, 28, 28)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(comboTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(25, 25, 25)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(txtDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(25, 25, 25)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel4)
+                            .addComponent(txtData, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(27, 27, 27)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel5)
+                            .addComponent(txtValor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(142, 142, 142)
+                        .addComponent(btnSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(73, Short.MAX_VALUE))
         );
 
@@ -255,31 +264,90 @@ public class TelaDespesas extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
-        int idVeic = Integer.parseInt(txtIdVeiculo.getText());
+        try {
+    // ID obrigatório
+    String idTexto = txtIdVeiculo.getText().trim();
+    if (idTexto.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "O ID do veículo não pode estar vazio.");
+        return;
+    }
 
-    // LER BLOCO COMPLETO DO VEÍCULO
+    // ID numérico
+    int idVeic;
+    try {
+        idVeic = Integer.parseInt(idTexto);
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "O ID do veículo deve conter apenas números!");
+        return;
+    }
+
+    // Buscar veículo no TXT
     String bloco = lerBlocoVeiculo(idVeic);
-
     if (bloco == null) {
-        JOptionPane.showMessageDialog(this, "Veículo não encontrado!");
+        JOptionPane.showMessageDialog(this, "Veículo não encontrado no arquivo!");
         return;
     }
 
     TipoDespesa tipo = (TipoDespesa) comboTipo.getSelectedItem();
 
+    // Validar data
+    String dataTexto = txtData.getText().trim();
+    if (dataTexto.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "A data não pode estar vazia!");
+        return;
+    }
+    if (!dataValida(dataTexto)) {
+        JOptionPane.showMessageDialog(this, "Data inválida! Use o formato dd/MM/yyyy.");
+        return;
+    }
+
+    // Validar valor
+    String valorTexto = txtValor.getText().trim();
+    if (valorTexto.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "O valor não pode estar vazio!");
+        return;
+    }
+
+    double valor;
+    try {
+        valor = Double.parseDouble(valorTexto.replace(",", "."));
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "O valor deve conter somente números!");
+        return;
+    }
+
+    // Criar objeto Movimentacao
     Movimentacao mov = new Movimentacao();
     mov.setIdVeiculo(idVeic);
     mov.setIdTipoDespesa(tipo.getId());
     mov.setDescricao(txtDescricao.getText());
-    mov.setData(txtData.getText());
-    mov.setValor(Double.parseDouble(txtValor.getText()));
+    mov.setData(dataTexto);
+    mov.setValor(valor);
 
-    // SALVAR BLOCO DO VEÍCULO + DESPESA
+    // SALVAR NO TXT
     MovimentacaoDAO dao = new MovimentacaoDAO();
     dao.salvarMovimentacaoCompleta(bloco, mov);
 
+    // SALVAR NO EXCEL (pacote dao.excel)
+    dao.excel.MovimentacaoExcelDAO excelDAO = new dao.excel.MovimentacaoExcelDAO();
+    excelDAO.salvarMovExcel(mov);
+
     JOptionPane.showMessageDialog(this, "Despesa salva com sucesso!");
+
+} catch (Exception ex) {
+    JOptionPane.showMessageDialog(this, "Erro inesperado: " + ex.getMessage());
+}
+
+
     }//GEN-LAST:event_btnSalvarActionPerformed
+
+    private void btnVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltarActionPerformed
+        MainFrame mf = new MainFrame();
+        mf.setVisible(true);
+        this.dispose();
+        
+        
+    }//GEN-LAST:event_btnVoltarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -308,6 +376,7 @@ public class TelaDespesas extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnSalvar;
+    private javax.swing.JButton btnVoltar;
     private javax.swing.JComboBox comboTipo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

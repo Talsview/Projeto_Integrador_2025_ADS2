@@ -1,11 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package view;
 
 import dao.VeiculoDAO;
-import dao.VeiculoExcelDAO;
+import dao.excel.VeiculoExcelDAO;
 import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -47,7 +43,7 @@ public class TelaVeiculo extends javax.swing.JFrame {
         txtAno = new javax.swing.JTextField();
         cbTipo = new javax.swing.JComboBox<>();
         btnSalvarTXT = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        btnVoltar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -72,10 +68,10 @@ public class TelaVeiculo extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("Cadastrar Excel");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnVoltar.setText("Voltar");
+        btnVoltar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnVoltarActionPerformed(evt);
             }
         });
 
@@ -108,9 +104,9 @@ public class TelaVeiculo extends javax.swing.JFrame {
                                     .addComponent(txtPlaca, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGap(311, 311, 311))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(70, 70, 70)
-                        .addComponent(jButton1)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addGap(70, 379, Short.MAX_VALUE)
+                        .addComponent(btnVoltar)
+                        .addGap(54, 54, 54))))
         );
 
         layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {cbStatus, cbTipo, txtAno, txtID, txtModelo, txtPlaca});
@@ -143,7 +139,7 @@ public class TelaVeiculo extends javax.swing.JFrame {
                 .addGap(116, 116, 116)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnSalvarTXT)
-                    .addComponent(jButton1))
+                    .addComponent(btnVoltar))
                 .addContainerGap(36, Short.MAX_VALUE))
         );
 
@@ -153,50 +149,117 @@ public class TelaVeiculo extends javax.swing.JFrame {
 
     private void btnSalvarTXTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarTXTActionPerformed
           try {
-        int id = Integer.parseInt(txtID.getText());
-        String tipo = cbTipo.getSelectedItem().toString();
-        String modelo = txtModelo.getText();
-        String placa = txtPlaca.getText();
-        int ano = Integer.parseInt(txtAno.getText());
-        String status = cbStatus.getSelectedItem().toString();
+    // Verificar campos vazios
+    if (txtID.getText().trim().isEmpty() ||
+        txtPlaca.getText().trim().isEmpty() ||
+        txtModelo.getText().trim().isEmpty() ||
+        txtAno.getText().trim().isEmpty()) {
 
-        Veiculo v = new Veiculo(id, tipo, modelo, placa, ano, status);
-
-        VeiculoDAO dao = new VeiculoDAO();
-        dao.adicionar(v);
-
-        JOptionPane.showMessageDialog(this, "Veículo salvo no TXT com sucesso!");
-
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(this,
-            "Erro ao salvar: " + e.getMessage(),
-            "Erro",
-            JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, "Preencha todos os campos!");
+        return;
     }
+
+    // ID numérico
+    int id;
+    try {
+        id = Integer.parseInt(txtID.getText().trim());
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "O ID deve conter apenas números!");
+        return;
+    }
+
+    // ID duplicado
+    try (java.io.BufferedReader br = new java.io.BufferedReader(
+            new java.io.FileReader("BancodeDadosVeiculos.txt"))) {
+
+        String linha;
+        while ((linha = br.readLine()) != null) {
+            if (linha.startsWith("ID:")) {
+                int idExistente = Integer.parseInt(linha.split(":")[1].trim());
+                if (idExistente == id) {
+                    JOptionPane.showMessageDialog(this,
+                        "Já existe um veículo cadastrado com esse ID!");
+                    return;
+                }
+            }
+        }
+    }
+
+    // Ano numérico
+    int ano;
+    try {
+        ano = Integer.parseInt(txtAno.getText().trim());
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "O ano deve conter apenas números!");
+        return;
+    }
+
+    // Ano válido
+    if (ano < 1900 || ano > 2025) {
+        JOptionPane.showMessageDialog(this, "Ano inválido! Digite entre 1900 e 2025.");
+        return;
+    }
+
+    // Placa sem minúsculas
+    String placa = txtPlaca.getText().trim();
+    if (!placa.equals(placa.toUpperCase())) {
+        JOptionPane.showMessageDialog(this, "A placa não pode conter letras minúsculas!");
+        return;
+    }
+
+    // Formato da placa
+    String padrao1 = "^[A-Z]{3}[0-9][A-Z][0-9]{2}$";  
+    String padrao2 = "^[A-Z]{3}-[0-9]{4}$";
+    if (!placa.matches(padrao1) && !placa.matches(padrao2)) {
+        JOptionPane.showMessageDialog(this, "Placa inválida! Use ABC1D23 ou ABC-1234");
+        return;
+    }
+
+    // Placa duplicada
+    try (java.io.BufferedReader br = new java.io.BufferedReader(
+            new java.io.FileReader("BancodeDadosVeiculos.txt"))) {
+
+        String linha;
+        while ((linha = br.readLine()) != null) {
+            if (linha.startsWith("Placa:")) {
+                String existente = linha.split(":", 2)[1].trim();
+                if (existente.equalsIgnoreCase(placa)) {
+                    JOptionPane.showMessageDialog(this, "Essa placa já está cadastrada!");
+                    return;
+                }
+            }
+        }
+    }
+
+    // Criar objeto
+    String modelo = txtModelo.getText().trim();
+    String tipo = cbTipo.getSelectedItem().toString();
+    String status = cbStatus.getSelectedItem().toString();
+
+    Veiculo v = new Veiculo(id, tipo, modelo, placa, ano, status);
+
+    // Salvar em TXT
+    VeiculoDAO dao = new VeiculoDAO();
+    dao.adicionar(v);
+
+    // Salvar em Excel
+    dao.excel.VeiculoExcelDAO excelDAO = new dao.excel.VeiculoExcelDAO();
+    excelDAO.salvarEmExcel(v);
+
+    JOptionPane.showMessageDialog(this,
+        "Veículo salvo no TXT e Excel com sucesso!");
+
+} catch (Exception e) {
+    JOptionPane.showMessageDialog(this, "Erro ao salvar: " + e.getMessage());
+}
+
     }//GEN-LAST:event_btnSalvarTXTActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        try {
-        int id = Integer.parseInt(txtID.getText());
-        String placa = txtPlaca.getText();
-        String modelo = txtModelo.getText();
-        String tipo = cbTipo.getSelectedItem().toString();
-        int ano = Integer.parseInt(txtAno.getText());
-        String status = cbStatus.getSelectedItem().toString();
-
-        Veiculo v = new Veiculo(id, placa, modelo, tipo, ano, status);
-
-        VeiculoExcelDAO dao = new VeiculoExcelDAO();
-        dao.salvarEmExcel(v);
-
-        JOptionPane.showMessageDialog(this, 
-                "Veículo salvo na planilha Excel!");
-
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, 
-                "Erro ao salvar no Excel: " + e.getMessage());
-    }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void btnVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltarActionPerformed
+        MainFrame mf = new MainFrame();
+        mf.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnVoltarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -225,9 +288,9 @@ public class TelaVeiculo extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnSalvarTXT;
+    private javax.swing.JButton btnVoltar;
     private javax.swing.JComboBox<String> cbStatus;
     private javax.swing.JComboBox<String> cbTipo;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
