@@ -7,6 +7,8 @@ import model.TipoDespesa;
 import model.Veiculo;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import javax.swing.JOptionPane;
 
 public class TelaDespesas extends javax.swing.JFrame {
@@ -301,6 +303,22 @@ public class TelaDespesas extends javax.swing.JFrame {
         return;
     }
 
+    // *** NOVA VALIDAÇÃO: BLOQUEAR DATA FUTURA ***
+    try {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate dataInformada = LocalDate.parse(dataTexto, formatter);
+        LocalDate hoje = LocalDate.now();
+
+        if (dataInformada.isAfter(hoje)) {
+            JOptionPane.showMessageDialog(this, "A data informada não pode ser futura!");
+            return;
+        }
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Erro ao validar data!");
+        return;
+    }
+    // *** FIM DA VALIDAÇÃO DE DATA FUTURA ***
+
     // Validar valor
     String valorTexto = txtValor.getText().trim();
     if (valorTexto.isEmpty()) {
@@ -315,6 +333,13 @@ public class TelaDespesas extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, "O valor deve conter somente números!");
         return;
     }
+
+    // *** NOVA VALIDAÇÃO: BLOQUEAR VALOR NEGATIVO ***
+    if (valor < 0) {
+        JOptionPane.showMessageDialog(this, "O valor não pode ser negativo!");
+        return;
+    }
+    // *** FIM DA VALIDAÇÃO ***
 
     // Criar objeto Movimentacao
     Movimentacao mov = new Movimentacao();

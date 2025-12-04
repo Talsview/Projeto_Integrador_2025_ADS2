@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.FileReader;
 import java.io.BufferedReader;
 import java.io.File;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import model.Movimentacao;
@@ -92,262 +93,285 @@ public class MovimentacaoDAO {
     
     // Soma despesas por mês/ano
     public double somatorioDespesasPorMes(int mes, int ano) {
-        double total = 0.0;
-        String caminho = "Movimentacoes.txt";
 
-        try (BufferedReader br = new BufferedReader(new FileReader(caminho))) {
+    if (mes < 1 || mes > 12) {
+        throw new IllegalArgumentException("Mês inválido! Informe um valor entre 1 e 12.");
+    }
 
-            String linha;
-            String data = null;
-            Double valor = null;
+    if (String.valueOf(ano).length() != 4) {
+        throw new IllegalArgumentException("Ano inválido! Informe exatamente 4 dígitos.");
+    }
 
-            while ((linha = br.readLine()) != null) {
-                linha = linha.trim();
+    double total = 0.0;
+
+    try (BufferedReader br = new BufferedReader(new FileReader("Movimentacoes.txt"))) {
+
+        String linha;
+        String data = null;
+        Double valor = null;
+
+        while ((linha = br.readLine()) != null) {
+            linha = linha.trim();
+
+            if (linha.startsWith("Data:")) {
+                data = linha.split(":", 2)[1].trim();
+                continue;
+            }
+
+            if (linha.startsWith("Valor:")) {
+                try {
+                    valor = Double.parseDouble(linha.split(":", 2)[1].trim());
+                } catch (Exception e) { valor = null; }
+                continue;
+            }
+
+            // fim de bloco
+            if (linha.isEmpty() || linha.startsWith("ID:")) {
+                if (data != null && valor != null) {
+
+                    String[] partes = data.split("/");
+                    if (partes.length >= 3) {
+                        try {
+                            int mesArquivo = Integer.parseInt(partes[1]);
+                            int anoArquivo = Integer.parseInt(partes[2]);
+
+                            if (mesArquivo == mes && anoArquivo == ano) {
+                                total += valor;
+                            }
+                        } catch (Exception e) {}
+                    }
+                }
+                data = null;
+                valor = null;
+            }
+        }
+
+    } catch (Exception e) {
+        throw new RuntimeException("Erro ao ler Movimentacoes.txt");
+    }
+
+    return total;
+}
+
+    
+    // Soma total de IPVA por ano
+    public double somatorioIPVAporAno(int ano) throws IllegalArgumentException {
+
+    //Exceção para limitar o Ano
+
+    if (ano < 1000 || ano > 9999) {
+        throw new IllegalArgumentException("Ano inválido! Informe exatamente 4 dígitos.");
+    }
+
+    if (ano < 2000) {
+        throw new IllegalArgumentException("Ano muito antigo! O mínimo permitido é 2000.");
+    }
+
+    double total = 0.0;
+
+    try (BufferedReader br = new BufferedReader(new FileReader("Movimentacoes.txt"))) {
+
+        String linha;
+        boolean lendo = false;
+
+        Integer tipo = null;
+        String data = null;
+        Double valor = null;
+
+        while ((linha = br.readLine()) != null) {
+
+            if (linha.startsWith("ID:")) {
+                lendo = true;
+                tipo = null;
+                data = null;
+                valor = null;
+                continue;
+            }
+
+            if (lendo) {
+
+                if (linha.startsWith("Tipo:")) {
+                    try {
+                        tipo = Integer.parseInt(linha.split(":")[1].trim());
+                    } catch (Exception e) {}
+                }
 
                 if (linha.startsWith("Data:")) {
-                    data = linha.split(":", 2)[1].trim();
-                    continue;
+                    data = linha.split(":")[1].trim();
                 }
 
                 if (linha.startsWith("Valor:")) {
                     try {
-                        valor = Double.parseDouble(linha.split(":", 2)[1].trim());
-                    } catch (NumberFormatException e) { valor = null; }
-                    continue;
-                }
+                        valor = Double.parseDouble(linha.split(":")[1].trim());
+                    } catch (Exception e) {}
 
-                // fim do bloco
-                if (linha.startsWith("===") || linha.isEmpty()) {
-                    if (data != null && valor != null) {
-                        String[] partes = data.split("/");
-                        if (partes.length >= 3) {
-                            try {
-                                int mesArquivo = Integer.parseInt(partes[1]);
-                                int anoArquivo = Integer.parseInt(partes[2]);
-                                if (mesArquivo == mes && anoArquivo == ano) {
-                                    total += valor;
-                                }
-                            } catch (NumberFormatException ex) {}
+                    if (tipo != null && tipo == 3) { 
+                        if (data != null && data.contains("/")) {
+                            String[] partes = data.split("/");
+                            int anoTxt = Integer.parseInt(partes[2]);
+                            if (anoTxt == ano) total += valor;
                         }
                     }
-                    data = null;
-                    valor = null;
+
+                    lendo = false;
                 }
             }
-
-            // último bloco
-            if (data != null && valor != null) {
-                String[] partes = data.split("/");
-                try {
-                    int mesArquivo = Integer.parseInt(partes[1]);
-                    int anoArquivo = Integer.parseInt(partes[2]);
-                    if (mesArquivo == mes && anoArquivo == ano) total += valor;
-                } catch (Exception e) {}
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
 
-        return total;
+    } catch (Exception e) {
+        e.printStackTrace();
     }
-    
-    // Soma total de IPVA por ano
-    public double somatorioIPVAporAno(int ano) {
 
-        double total = 0.0;
-
-        try (BufferedReader br = new BufferedReader(new FileReader("Movimentacoes.txt"))) {
-
-            String linha;
-            boolean lendo = false;
-
-            Integer tipo = null;
-            String data = null;
-            Double valor = null;
-
-            while ((linha = br.readLine()) != null) {
-
-                if (linha.startsWith("ID:")) {
-                    lendo = true;
-                    tipo = null;
-                    data = null;
-                    valor = null;
-                    continue;
-                }
-
-                if (lendo) {
-
-                    if (linha.startsWith("Tipo:")) {
-                        try {
-                            tipo = Integer.parseInt(linha.split(":")[1].trim());
-                        } catch (Exception e) {}
-                    }
-
-                    if (linha.startsWith("Data:")) {
-                        data = linha.split(":")[1].trim();
-                    }
-
-                    if (linha.startsWith("Valor:")) {
-                        try {
-                            valor = Double.parseDouble(linha.split(":")[1].trim());
-                        } catch (Exception e) {}
-
-                        if (tipo != null && tipo == 3) { 
-                            if (data != null && data.contains("/")) {
-                                String[] partes = data.split("/");
-                                int anoTxt = Integer.parseInt(partes[2]);
-                                if (anoTxt == ano) total += valor;
-                            }
-                        }
-
-                        lendo = false;
-                    }
-                }
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return total;
-    }
+    return total;
+}
     
     // Lista multas por mês/ano
     public String listarMultasPorMes(int mes, int ano) {
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("===== MULTAS PAGAS NO MÊS =====\n\n");
+    // validações internas (retorno em texto, NÃO JOptionPane)
+    if (mes < 1 || mes > 12) {
+        return "Mês inválido! Digite um número entre 1 e 12.\n";
+    }
 
-        try (BufferedReader br = new BufferedReader(new FileReader("Movimentacoes.txt"))) {
+    if (String.valueOf(ano).length() != 4) {
+        return "Ano inválido!\n";
+    }
 
-            String linha;
-            StringBuilder bloco = new StringBuilder();
-            boolean lendo = false;
+    StringBuilder sb = new StringBuilder();
+    sb.append("===== MULTAS PAGAS NO MÊS =====\n\n");
 
-            Integer tipo = null;
-            String data = null;
+    try (BufferedReader br = new BufferedReader(new FileReader("Movimentacoes.txt"))) {
 
-            while ((linha = br.readLine()) != null) {
+        String linha;
+        StringBuilder bloco = new StringBuilder();
+        boolean lendo = false;
 
-                if (linha.startsWith("ID:")) {
-                    bloco = new StringBuilder();
-                    bloco.append(linha).append("\n");
-                    lendo = true;
-                    tipo = null;
-                    data = null;
-                    continue;
-                }
+        Integer tipo = null;
+        String data = null;
 
-                if (lendo) {
-                    bloco.append(linha).append("\n");
+        while ((linha = br.readLine()) != null) {
 
-                    if (linha.startsWith("Tipo:")) {
-                        try {
-                            tipo = Integer.parseInt(linha.split(":")[1].trim());
-                        } catch (Exception e) {}
-                    }
-
-                    if (linha.startsWith("Data:")) {
-                        data = linha.split(":")[1].trim();
-                    }
-
-                    if (linha.startsWith("Valor:")) {
-
-                        if (tipo != null && tipo == 4) {
-                            if (data != null && data.contains("/")) {
-                                String[] partes = data.split("/");
-                                int mesTxt = Integer.parseInt(partes[1]);
-                                int anoTxt = Integer.parseInt(partes[2]);
-                                if (mesTxt == mes && anoTxt == ano) {
-                                    sb.append(bloco).append("\n");
-                                }
-                            }
-                        }
-
-                        lendo = false;
-                    }
-                }
+            if (linha.startsWith("ID:")) {
+                bloco = new StringBuilder();
+                bloco.append(linha).append("\n");
+                lendo = true;
+                tipo = null;
+                data = null;
+                continue;
             }
 
-        } catch (Exception e) {
-            return "Erro ao ler Movimentacoes.txt\n";
+            if (lendo) {
+                bloco.append(linha).append("\n");
+
+                if (linha.startsWith("Tipo:")) {
+                    try {
+                        tipo = Integer.parseInt(linha.split(":")[1].trim());
+                    } catch (Exception e) {}
+                }
+
+                if (linha.startsWith("Data:")) {
+                    data = linha.split(":")[1].trim();
+                }
+
+                if (linha.startsWith("Valor:")) {
+
+                    if (tipo != null && tipo == 4) { // MULTAS
+                        if (data != null && data.contains("/")) {
+                            String[] partes = data.split("/");
+                            int mesTxt = Integer.parseInt(partes[1]);
+                            int anoTxt = Integer.parseInt(partes[2]);
+
+                            if (mesTxt == mes && anoTxt == ano) {
+                                sb.append(bloco).append("\n");
+                            }
+                        }
+                    }
+
+                    lendo = false;
+                }
+            }
         }
 
-        if (sb.toString().equals("===== MULTAS PAGAS NO MÊS =====\n\n")) {
-            return "Nenhuma multa encontrada nesse mês.\n";
-        }
-
-        return sb.toString();
+    } catch (Exception e) {
+        return "Erro ao ler Movimentacoes.txt\n";
     }
+
+    if (sb.toString().equals("===== MULTAS PAGAS NO MÊS =====\n\n")) {
+        return "Nenhuma multa encontrada nesse mês.\n";
+    }
+
+    return sb.toString();
+}
     
     // Lista despesas de combustível por mês
     public String listarDespesasCombustivelPorMes(int mes, int ano) {
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("===== DESPESAS DE COMBUSTÍVEL =====\n\n");
+    StringBuilder sb = new StringBuilder();
+    sb.append("===== DESPESAS DE COMBUSTÍVEL =====\n\n");
 
-        try (BufferedReader br = new BufferedReader(new FileReader("Movimentacoes.txt"))) {
+    try (BufferedReader br = new BufferedReader(new FileReader("Movimentacoes.txt"))) {
 
-            String linha;
-            StringBuilder bloco = new StringBuilder();
-            boolean lendo = false;
+        String linha;
+        StringBuilder bloco = new StringBuilder();
+        boolean lendo = false;
 
-            Integer tipo = null;
-            String data = null;
+        Integer tipo = null;
+        String data = null;
 
-            while ((linha = br.readLine()) != null) {
+        while ((linha = br.readLine()) != null) {
 
-                if (linha.startsWith("ID:")) {
-                    bloco = new StringBuilder();
-                    bloco.append(linha).append("\n");
-                    lendo = true;
-                    tipo = null;
-                    data = null;
-                    continue;
-                }
-
-                if (lendo) {
-                    bloco.append(linha).append("\n");
-
-                    if (linha.startsWith("Tipo:")) {
-                        try {
-                            tipo = Integer.parseInt(linha.split(":")[1].trim());
-                        } catch (Exception e) {}
-                    }
-
-                    if (linha.startsWith("Data:")) {
-                        data = linha.split(":")[1].trim();
-                    }
-
-                    if (linha.startsWith("Valor:")) {
-
-                        if (tipo != null && tipo == 1) {
-                            if (data != null && data.contains("/")) {
-                                String[] partes = data.split("/");
-                                int mesTxt = Integer.parseInt(partes[1]);
-                                int anoTxt = Integer.parseInt(partes[2]);
-                                if (mesTxt == mes && anoTxt == ano) {
-                                    sb.append(bloco).append("\n");
-                                }
-                            }
-                        }
-
-                        lendo = false;
-                    }
-                }
+            if (linha.startsWith("ID:")) {
+                bloco = new StringBuilder();
+                bloco.append(linha).append("\n");
+                lendo = true;
+                tipo = null;
+                data = null;
+                continue;
             }
 
-        } catch (Exception e) {
-            return "Erro ao ler Movimentacoes.txt\n";
+            if (lendo) {
+                bloco.append(linha).append("\n");
+
+                if (linha.startsWith("Tipo:")) {
+                    try {
+                        tipo = Integer.parseInt(linha.split(":")[1].trim());
+                    } catch (Exception e) {}
+                }
+
+                if (linha.startsWith("Data:")) {
+                    data = linha.split(":")[1].trim();
+                }
+
+                if (linha.startsWith("Valor:")) {
+
+                    if (tipo != null && tipo == 1) {
+                        if (data != null && data.contains("/")) {
+                            String[] partes = data.split("/");
+                            int mesTxt = Integer.parseInt(partes[1]);
+                            int anoTxt = Integer.parseInt(partes[2]);
+
+                            if (mesTxt == mes && anoTxt == ano) {
+                                sb.append(bloco).append("\n");
+                            }
+                        }
+                    }
+
+                    lendo = false;
+                }
+            }
         }
 
-        if (sb.toString().equals("===== DESPESAS DE COMBUSTÍVEL =====\n\n")) {
-            return "Nenhuma despesa de combustível encontrada.\n";
-        }
-
-        return sb.toString();
+    } catch (Exception e) {
+        return "Erro ao ler Movimentacoes.txt\n";
     }
+
+    if (sb.toString().equals("===== DESPESAS DE COMBUSTÍVEL =====\n\n")) {
+        return "Nenhuma despesa de combustível encontrada.\n";
+    }
+
+    return sb.toString();
+}
+
     
     // Lista despesas por ID do veículo
     public String listarDespesasPorVeiculo(int idVeiculo) {

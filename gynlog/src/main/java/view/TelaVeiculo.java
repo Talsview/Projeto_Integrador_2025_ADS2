@@ -44,6 +44,7 @@ public class TelaVeiculo extends javax.swing.JFrame {
         cbTipo = new javax.swing.JComboBox<>();
         btnSalvarTXT = new javax.swing.JButton();
         btnVoltar = new javax.swing.JButton();
+        btnEditar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -75,6 +76,13 @@ public class TelaVeiculo extends javax.swing.JFrame {
             }
         });
 
+        btnEditar.setText("Editar");
+        btnEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -89,7 +97,7 @@ public class TelaVeiculo extends javax.swing.JFrame {
                         .addComponent(jLabel1)
                         .addComponent(jLabel3)
                         .addComponent(jLabel2)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -104,7 +112,9 @@ public class TelaVeiculo extends javax.swing.JFrame {
                                     .addComponent(txtPlaca, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGap(311, 311, 311))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(70, 379, Short.MAX_VALUE)
+                        .addGap(72, 72, 72)
+                        .addComponent(btnEditar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnVoltar)
                         .addGap(54, 54, 54))))
         );
@@ -139,7 +149,8 @@ public class TelaVeiculo extends javax.swing.JFrame {
                 .addGap(116, 116, 116)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnSalvarTXT)
-                    .addComponent(btnVoltar))
+                    .addComponent(btnVoltar)
+                    .addComponent(btnEditar))
                 .addContainerGap(36, Short.MAX_VALUE))
         );
 
@@ -159,10 +170,25 @@ public class TelaVeiculo extends javax.swing.JFrame {
         return;
     }
 
+    // *** NOVA VALIDAÇÃO: ID NÃO PODE TER CARACTERES ESPECIAIS ***
+    if (!txtID.getText().trim().matches("\\d+")) {
+        JOptionPane.showMessageDialog(this,
+            "O ID deve conter apenas números (nenhum símbolo ou letra)!");
+        return;
+    }
+    // **************************************************************
+
     // ID numérico
     int id;
     try {
         id = Integer.parseInt(txtID.getText().trim());
+
+        // *** VALIDAR NEGATIVO ***
+        if (id < 0) {
+            JOptionPane.showMessageDialog(this, "O ID não pode ser negativo!");
+            return;
+        }
+
     } catch (NumberFormatException e) {
         JOptionPane.showMessageDialog(this, "O ID deve conter apenas números!");
         return;
@@ -189,14 +215,21 @@ public class TelaVeiculo extends javax.swing.JFrame {
     int ano;
     try {
         ano = Integer.parseInt(txtAno.getText().trim());
+
+        // *** VALIDAR NEGATIVO ***
+        if (ano < 0) {
+            JOptionPane.showMessageDialog(this, "O ano não pode ser negativo!");
+            return;
+        }
+
     } catch (NumberFormatException e) {
         JOptionPane.showMessageDialog(this, "O ano deve conter apenas números!");
         return;
     }
 
     // Ano válido
-    if (ano < 1900 || ano > 2025) {
-        JOptionPane.showMessageDialog(this, "Ano inválido! Digite entre 1900 e 2025.");
+    if (ano < 2000) {
+        JOptionPane.showMessageDialog(this, "Ano inválido! Digite entre 2000 e 2025.");
         return;
     }
 
@@ -253,6 +286,7 @@ public class TelaVeiculo extends javax.swing.JFrame {
     JOptionPane.showMessageDialog(this, "Erro ao salvar: " + e.getMessage());
 }
 
+
     }//GEN-LAST:event_btnSalvarTXTActionPerformed
 
     private void btnVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltarActionPerformed
@@ -260,6 +294,11 @@ public class TelaVeiculo extends javax.swing.JFrame {
         mf.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnVoltarActionPerformed
+
+    private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
+        new TelaTrocarStatus().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnEditarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -287,6 +326,7 @@ public class TelaVeiculo extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnSalvarTXT;
     private javax.swing.JButton btnVoltar;
     private javax.swing.JComboBox<String> cbStatus;

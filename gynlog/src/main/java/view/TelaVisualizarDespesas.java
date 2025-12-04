@@ -60,7 +60,7 @@ public class TelaVisualizarDespesas extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("Somatorio Geral");
+        jButton1.setText("Somatorio Mês");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -130,7 +130,7 @@ public class TelaVisualizarDespesas extends javax.swing.JFrame {
                 .addComponent(jButton5)
                 .addGap(36, 36, 36)
                 .addComponent(jButton2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 87, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 92, Short.MAX_VALUE)
                 .addComponent(jButton4)
                 .addGap(22, 22, 22))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -184,71 +184,124 @@ public class TelaVisualizarDespesas extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
-    // pegar mês e ano via JOptionPane
+
+    // ==== CAPTURAR MÊS ====
     String mesStr = JOptionPane.showInputDialog(this, "Mês (1-12):");
-    String anoStr = JOptionPane.showInputDialog(this, "Ano (ex: 2025):");
-    if (mesStr == null || anoStr == null) return; // cancelado
+    if (mesStr == null) return; // cancelou
+
+    // validação imediata: máximo 2 caracteres
+    if (mesStr.trim().length() > 2) {
+        JOptionPane.showMessageDialog(this, "O mês deve conter no máximo 2 dígitos.");
+        return;
+    }
 
     int mes = Integer.parseInt(mesStr.trim());
+
+    // validação imediata: 1 a 12
+    if (mes < 1 || mes > 12) {
+        JOptionPane.showMessageDialog(this, "Mês inválido! Digite um mês entre 1 e 12.");
+        return;
+    }
+
+    // ==== CAPTURAR ANO ====
+    String anoStr = JOptionPane.showInputDialog(this, "Ano (ex: 2025):");
+    if (anoStr == null) return;
+
     int ano = Integer.parseInt(anoStr.trim());
 
+    if (anoStr.trim().length() != 4) {
+        JOptionPane.showMessageDialog(this, "Ano inválido! Informe exatamente 4 dígitos.");
+        return;
+    }
+
+    // ==== EXECUTAR O MÉTODO ====
     MovimentacaoDAO dao = new MovimentacaoDAO();
     double total = dao.somatorioDespesasPorMes(mes, ano);
 
     java.text.NumberFormat nf =
         java.text.NumberFormat.getCurrencyInstance(new java.util.Locale("pt", "BR"));
 
-    // limpar txtArea antes de escrever
     txtArea.setText("");
-
-    // escrever relatório formatado
     txtArea.append("===== RELATÓRIO DE DESPESAS DA FROTA =====\n\n");
     txtArea.append("Período pesquisado: " + String.format("%02d/%d", mes, ano) + "\n");
     txtArea.append("-------------------------------------------\n");
     txtArea.append("Total de despesas: " + nf.format(total) + "\n");
 
 } catch (NumberFormatException nfe) {
-    JOptionPane.showMessageDialog(this, "Mês/ano inválidos.");
+    JOptionPane.showMessageDialog(this, "Entrada inválida! Insira apenas números.");
+} catch (IllegalArgumentException iae) {
+    JOptionPane.showMessageDialog(this, iae.getMessage());
 }
 
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         try {
-        String anoStr = JOptionPane.showInputDialog(this, "Ano (ex: 2025):");
-        if (anoStr == null) return;
+    String anoStr = JOptionPane.showInputDialog(this, "Ano (ex: 2025):");
+    if (anoStr == null) return; // cancelar
 
-        int ano = Integer.parseInt(anoStr.trim());
+    int ano = Integer.parseInt(anoStr.trim());
 
-        MovimentacaoDAO dao = new MovimentacaoDAO();
-        double total = dao.somatorioIPVAporAno(ano);
+    MovimentacaoDAO dao = new MovimentacaoDAO();
+    double total = dao.somatorioIPVAporAno(ano);
 
-        java.text.NumberFormat nf =
-                java.text.NumberFormat.getCurrencyInstance(new java.util.Locale("pt","BR"));
+    java.text.NumberFormat nf =
+            java.text.NumberFormat.getCurrencyInstance(new java.util.Locale("pt","BR"));
 
-        String msg = "Somatório de IPVA da frota no ano " + ano + ":\n\n" +
-                     nf.format(total);
+    String msg = "Somatório de IPVA da frota no ano " + ano + ":\n\n" +
+                 nf.format(total);
 
-        txtArea.setText(msg);
+    txtArea.setText(msg);
 
-    } catch (NumberFormatException nfe) {
-        JOptionPane.showMessageDialog(this, "Ano inválido!");
-    }
+} catch (IllegalArgumentException iae) {
+    // AQUI: pega as mensagens lançadas pelo dao
+    JOptionPane.showMessageDialog(this, iae.getMessage());
+
+} catch (Exception e) {
+    JOptionPane.showMessageDialog(this, "Erro inesperado!");
+}
+
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         try {
-        int mes = Integer.parseInt(JOptionPane.showInputDialog(this, "Mês (1-12):"));
-        int ano = Integer.parseInt(JOptionPane.showInputDialog(this, "Ano (ex: 2025):"));
+    String mesStr = JOptionPane.showInputDialog(this, "Mês (1-12):");
+    if (mesStr == null) return;
 
-        MovimentacaoDAO dao = new MovimentacaoDAO();
-        String resultado = dao.listarMultasPorMes(mes, ano);
+    // valida tamanho do mês digitado
+    if (mesStr.trim().length() > 2) {
+        JOptionPane.showMessageDialog(this, "Digite apenas 2 dígitos para o mês!");
+        return;
+    }
 
-        txtArea.setText(resultado);
+    int mes = Integer.parseInt(mesStr.trim());
 
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, "Dados inválidos!");
+    // valida faixa do mês
+    if (mes < 1 || mes > 12) {
+        JOptionPane.showMessageDialog(this, "Mês inválido! Informe um valor entre 1 e 12.");
+        return;
+    }
+
+    String anoStr = JOptionPane.showInputDialog(this, "Ano (ex: 2025):");
+    if (anoStr == null) return;
+
+    // valida 4 dígitos
+    if (anoStr.trim().length() != 4) {
+        JOptionPane.showMessageDialog(this, "Ano inválido! Informe exatamente 4 dígitos.");
+        return;
+    }
+
+    int ano = Integer.parseInt(anoStr.trim());
+
+    MovimentacaoDAO dao = new MovimentacaoDAO();
+    String resultado = dao.listarMultasPorMes(mes, ano);
+
+    txtArea.setText(resultado);
+
+} catch (NumberFormatException e) {
+    JOptionPane.showMessageDialog(this, "Entrada inválida! Digite apenas números.");
 }
+
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
@@ -259,17 +312,54 @@ public class TelaVisualizarDespesas extends javax.swing.JFrame {
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         try {
-        int mes = Integer.parseInt(JOptionPane.showInputDialog(this, "Mês (1-12):"));
-        int ano = Integer.parseInt(JOptionPane.showInputDialog(this, "Ano (ex: 2025):"));
 
-        MovimentacaoDAO dao = new MovimentacaoDAO();
-        String resultado = dao.listarDespesasCombustivelPorMes(mes, ano);
+    String mesStr = JOptionPane.showInputDialog(this, "Mês (1-12):");
 
-        txtArea.setText(resultado);
-
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, "Dados inválidos!");
+    // Verificar se digitou algo
+    if (mesStr == null || mesStr.trim().isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Você deve digitar um mês!");
+        return;
     }
+
+    // Verificar número máximo de caracteres
+    if (mesStr.length() > 2) {
+        JOptionPane.showMessageDialog(this, "Mês inválido! Digite apenas 1 ou 2 dígitos.");
+        return;
+    }
+
+    int mes = Integer.parseInt(mesStr);
+
+    // Verificar faixa válida
+    if (mes < 1 || mes > 12) {
+        JOptionPane.showMessageDialog(this, "Mês inválido! O mês deve estar entre 1 e 12.");
+        return;
+    }
+
+    // AGORA pede o ano
+    String anoStr = JOptionPane.showInputDialog(this, "Ano (ex: 2025):");
+
+    if (anoStr == null || anoStr.trim().isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Você deve digitar um ano!");
+        return;
+    }
+
+    if (anoStr.length() != 4) {
+        JOptionPane.showMessageDialog(this, "Ano inválido!");
+        return;
+    }
+
+    int ano = Integer.parseInt(anoStr);
+
+    // Chamar o DAO sem verificações (elas são feitas no botão)
+    MovimentacaoDAO dao = new MovimentacaoDAO();
+    String resultado = dao.listarDespesasCombustivelPorMes(mes, ano);
+
+    txtArea.setText(resultado);
+
+} catch (NumberFormatException e) {
+    JOptionPane.showMessageDialog(this, "Digite apenas números!");
+}
+
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed

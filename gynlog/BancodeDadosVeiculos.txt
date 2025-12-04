@@ -3,7 +3,7 @@ Tipo: Chevrolet
 Modelo: Camaro
 Placa: QIEUXN7
 Ano: 2019
-Status: Inativo
+Status: Ativo
 ========================================
 
 ID: 2
@@ -11,7 +11,7 @@ Tipo: Fiat
 Modelo: Uno
 Placa: QIEUXN78
 Ano: 2019
-Status: Ativo
+Status: Inativo
 ========================================
 
 ID: 3
@@ -29,43 +29,18 @@ Placa: ABC1D23
 Ano: 2025
 Status: Ativo
 ========================================
-
-ID: 1
+ID: -1
 Tipo: Chevrolet
-Modelo: Corvetinho
-Placa: QWC2D12
-Ano: 2025
-Status: Inativo
-========================================
-
-ID: 4
-Tipo: Chevrolet
-Modelo: cORVETINHO
-Placa: QEW3D12
-Ano: 2025
+Modelo: DASDA
+Placa: QWE1R12
+Ano: 2000
 Status: Ativo
 ========================================
 
-ID: 6
+ID: 55
 Tipo: Chevrolet
-Modelo: Corvetezinho
-Placa: QWE3D12
-Ano: 2025
-Status: Ativo
-========================================
-
-ID: 14
-Tipo: Chevrolet
-Modelo: Caminho
-Placa: QWE3R12
-Ano: 2025
-Status: Ativo
-========================================
-
-ID: 50
-Tipo: Chevrolet
-Modelo: cORVETE
-Placa: QWE2E14
+Modelo: ADA
+Placa: QWE2E12
 Ano: 2025
 Status: Ativo
 ========================================
