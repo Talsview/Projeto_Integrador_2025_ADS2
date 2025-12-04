@@ -240,7 +240,16 @@ public class TelaVisualizarDespesas extends javax.swing.JFrame {
     String anoStr = JOptionPane.showInputDialog(this, "Ano (ex: 2025):");
     if (anoStr == null) return; // cancelar
 
-    int ano = Integer.parseInt(anoStr.trim());
+    anoStr = anoStr.trim();
+
+    // --- VALIDAÇÃO PARA ACEITAR SOMENTE NÚMEROS ---
+    if (!anoStr.matches("\\d+")) {
+        JOptionPane.showMessageDialog(this, 
+              "Digite apenas números para o ano (ex: 2025).");
+        return;
+    }
+
+    int ano = Integer.parseInt(anoStr);
 
     MovimentacaoDAO dao = new MovimentacaoDAO();
     double total = dao.somatorioIPVAporAno(ano);
@@ -254,7 +263,6 @@ public class TelaVisualizarDespesas extends javax.swing.JFrame {
     txtArea.setText(msg);
 
 } catch (IllegalArgumentException iae) {
-    // AQUI: pega as mensagens lançadas pelo dao
     JOptionPane.showMessageDialog(this, iae.getMessage());
 
 } catch (Exception e) {
@@ -287,7 +295,7 @@ public class TelaVisualizarDespesas extends javax.swing.JFrame {
 
     // valida 4 dígitos
     if (anoStr.trim().length() != 4) {
-        JOptionPane.showMessageDialog(this, "Ano inválido! Informe exatamente 4 dígitos.");
+        JOptionPane.showMessageDialog(this, "Ano inválido!");
         return;
     }
 
