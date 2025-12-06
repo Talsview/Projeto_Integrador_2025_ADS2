@@ -1,0 +1,250 @@
+ID: 1
+Tipo: Chevrolet
+Modelo: Camaro
+Placa: QIEUXN7
+Ano: 2019
+Status: Inativo
+========================================
+Despesa:
+Tipo: 3
+Descrição: IPVA
+Data: 01/12/2025
+Valor: 100.0
+
+ID: 2
+Tipo: Fiat
+Modelo: Uno
+Placa: QIEUXN78
+Ano: 2019
+Status: Ativo
+========================================
+Despesa:
+Tipo: 3
+Descrição: IPVA
+Data: 01/12/2025
+Valor: 200.0
+
+ID: 3
+Tipo: BMW
+Modelo: X1
+Placa: QIEUXN79
+Ano: 2018
+Status: Ativo
+========================================
+Despesa:
+Tipo: 3
+Descrição: IPVA
+Data: 01/12/2025
+Valor: 300.0
+
+ID: 1
+Tipo: Chevrolet
+Modelo: Camaro
+Placa: QIEUXN7
+Ano: 2019
+Status: Inativo
+========================================
+Despesa:
+Tipo: 1
+Descrição: Posto Ipiranga
+Data: 01/05/2025
+Valor: 150.0
+
+ID: 2
+Tipo: Fiat
+Modelo: Uno
+Placa: QIEUXN78
+Ano: 2019
+Status: Ativo
+========================================
+Despesa:
+Tipo: 4
+Descrição: Furou a Faixa
+Data: 01/05/2025
+Valor: 200.0
+
+ID: 2
+Tipo: Fiat
+Modelo: Uno
+Placa: QIEUXN78
+Ano: 2019
+Status: Ativo
+========================================
+Despesa:
+Tipo: 1
+Descrição: Posto Ipiranga
+Data: 01/05/2025
+Valor: 200.0
+
+ID: 2
+Tipo: Fiat
+Modelo: Uno
+Placa: QIEUXN78
+Ano: 2019
+Status: Ativo
+========================================
+Despesa:
+Tipo: 4
+Descrição: Correu da Policia
+Data: 14/05/2025
+Valor: 400.0
+
+ID: 1
+Tipo: Chevrolet
+Modelo: Camaro
+Placa: QIEUXN7
+Ano: 2019
+Status: Inativo
+========================================
+Despesa:
+Tipo: 4
+Descrição: Furou o Radar
+Data: 01/05/2025
+Valor: 200.0
+
+ID: 1
+Tipo: Chevrolet
+Modelo: Camaro
+Placa: QIEUXN7
+Ano: 2019
+Status: Inativo
+========================================
+Despesa:
+Tipo: 2
+Descrição: Bateu
+Data: 25/08/2023
+Valor: 250.0
+
+ID: 1
+Tipo: Chevrolet
+Modelo: Camaro
+Placa: QIEUXN7
+Ano: 2019
+Status: Inativo
+========================================
+Despesa:
+Tipo: 1
+Descrição: Olha so
+Data: 26/05/2023
+Valor: 234.0
+
+ID: 2
+Tipo: Fiat
+Modelo: Uno
+Placa: QIEUXN78
+Ano: 2019
+Status: Ativo
+========================================
+Despesa:
+Tipo: 1
+Descrição: Falto bomba
+Data: 22/05/2023
+Valor: 250.0
+
+ID: 6
+Tipo: Chevrolet
+Modelo: Corvetezinho
+Placa: QWE3D12
+Ano: 2025
+Status: Ativo
+========================================
+Despesa:
+Tipo: 2
+Descrição: Quebrou
+Data: 25/02/2025
+Valor: 250.0
+
+ID: 14
+Tipo: Chevrolet
+Modelo: Caminho
+Placa: QWE3R12
+Ano: 2025
+Status: Ativo
+========================================
+Despesa:
+Tipo: 3
+Descrição: ASDakdsa
+Data: 01/03/2025
+Valor: 1000.0
+
+ID: 14
+Tipo: Chevrolet
+Modelo: Caminho
+Placa: QWE3R12
+Ano: 2025
+Status: Ativo
+========================================
+Despesa:
+Tipo: 3
+Descrição: ASDakdsa
+Data: 01/03/2025
+Valor: 1000.0
+
+ID: 14
+Tipo: Chevrolet
+Modelo: Caminho
+Placa: QWE3R12
+Ano: 2025
+Status: Ativo
+========================================
+Despesa:
+Tipo: 3
+Descrição: dasfdasdf
+Data: 01/03/2025
+Valor: 1000.0
+
+ID: 25
+Tipo: Chevrolet
+Modelo: Corvete
+TipoVeiculo: Carro
+Placa: QWE1R13
+Ano: 2025
+Status: Ativo
+========================================
+Despesa:
+Tipo: 3
+Descrição: IPVA
+Data: 06/12/2025
+Valor: 1000.0
+
+ID: 26
+Tipo: Chevrolet
+Modelo: Corvete
+TipoVeiculo: Caminhão
+Placa: POI3I23
+Ano: 2025
+Status: Ativo
+========================================
+Despesa:
+Tipo: 3
+Descrição: IPVA
+Data: 06/12/2025
+Valor: 1000.0
+
+ID: 35
+Tipo: Chevrolet
+Modelo: Corvete
+TipoVeiculo: Caminhão
+Placa: MNB3M12
+Ano: 2025
+Status: Ativo
+========================================
+Despesa:
+Tipo: 3
+Descrição: IPVA
+Data: 06/12/2025
+Valor: 1000.0
+
+ID: 1
+Tipo: Chevrolet
+Modelo: Camaro
+Placa: QIEUXN7
+Ano: 2019
+Status: Ativo
+========================================
+Despesa:
+Tipo: 1
+Descrição: SLA
+Data: 06/12/2025
+Valor: 5000.0
+

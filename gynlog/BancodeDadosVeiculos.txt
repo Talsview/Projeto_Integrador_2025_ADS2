@@ -1,0 +1,74 @@
+ID: 1
+Tipo: Chevrolet
+Modelo: Camaro
+Placa: QIEUXN7
+Ano: 2019
+Status: Ativo
+========================================
+
+ID: 2
+Tipo: Fiat
+Modelo: Uno
+Placa: QIEUXN78
+Ano: 2019
+Status: Inativo
+========================================
+
+ID: 3
+Tipo: BMW
+Modelo: X1
+Placa: QIEUXN79
+Ano: 2018
+Status: Ativo
+========================================
+
+ID: 3
+Tipo: Chevrolet
+Modelo: Corvete
+Placa: ABC1D23
+Ano: 2025
+Status: Ativo
+========================================
+ID: -1
+Tipo: Chevrolet
+Modelo: DASDA
+Placa: QWE1R12
+Ano: 2000
+Status: Ativo
+========================================
+
+ID: 55
+Tipo: Chevrolet
+Modelo: ADA
+Placa: QWE2E12
+Ano: 2025
+Status: Ativo
+========================================
+
+ID: 25
+Tipo: Chevrolet
+Modelo: Corvete
+TipoVeiculo: Carro
+Placa: QWE1R13
+Ano: 2025
+Status: Ativo
+========================================
+
+ID: 26
+Tipo: Chevrolet
+Modelo: Corvete
+TipoVeiculo: Caminhão
+Placa: POI3I23
+Ano: 2025
+Status: Ativo
+========================================
+
+ID: 35
+Tipo: Chevrolet
+Modelo: Corvete
+TipoVeiculo: Caminhão
+Placa: MNB3M12
+Ano: 2025
+Status: Ativo
+========================================
+
