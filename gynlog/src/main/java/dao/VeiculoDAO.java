@@ -109,42 +109,51 @@ public class VeiculoDAO {
 
 
     public boolean alterarStatusVeiculo(int id, String novoStatus) {
-        File arquivo = new File(CAMINHO);
+    File arquivo = new File(CAMINHO);
 
-        try {
-            List<String> linhas = Files.readAllLines(arquivo.toPath());
-            List<String> novoConteudo = new ArrayList<>();
+    try {
+        List<String> linhas = Files.readAllLines(arquivo.toPath());
+        List<String> novoConteudo = new ArrayList<>();
 
-            boolean dentroBloco = false;
-            boolean blocoDoId = false;
+        boolean dentroBloco = false;
+        boolean blocoDoId = false;
+        boolean encontrouId = false;
 
-            for (String linha : linhas) {
+        for (String linha : linhas) {
 
-                if (linha.startsWith("ID:")) {
-                    dentroBloco = true;
-                    blocoDoId = linha.equals("ID: " + id);
-                }
+            if (linha.startsWith("ID:")) {
+                dentroBloco = true;
+                blocoDoId = linha.equals("ID: " + id);
 
-                if (dentroBloco && blocoDoId && linha.startsWith("Status:")) {
-                    novoConteudo.add("Status: " + novoStatus);
-                } else {
-                    novoConteudo.add(linha);
-                }
-
-                if (linha.startsWith("========================================")) {
-                    dentroBloco = false;
+                if (blocoDoId) {
+                    encontrouId = true;
                 }
             }
 
-            Files.write(arquivo.toPath(), novoConteudo);
+            if (dentroBloco && blocoDoId && linha.startsWith("Status:")) {
+                novoConteudo.add("Status: " + novoStatus);
+            } else {
+                novoConteudo.add(linha);
+            }
 
-            return true;
+            if (linha.startsWith("========================================")) {
+                dentroBloco = false;
+            }
+        }
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (!encontrouId) {
             return false;
         }
+
+        Files.write(arquivo.toPath(), novoConteudo);
+
+        return true;
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        return false;
     }
+}
 
 
 
