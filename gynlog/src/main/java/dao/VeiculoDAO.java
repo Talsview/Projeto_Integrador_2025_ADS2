@@ -8,13 +8,13 @@ import model.Veiculo;
 
 public class VeiculoDAO {
 
-    // CAMINHO PÚBLICO para usar no botão
+    // CAMINHO PÚBLICO para uso externo (ex: botão)
     public static final String CAMINHO =
-        System.getProperty("user.home") + File.separator +
-        "Documents" + File.separator +
-        "NetBeansProjects" + File.separator +
-        "gynlog" + File.separator +
-        "BancodeDadosVeiculos.txt";
+            System.getProperty("user.home") + File.separator +
+            "Documents" + File.separator +
+            "NetBeansProjects" + File.separator +
+            "gynlog" + File.separator +
+            "BancodeDadosVeiculos.txt";
 
     private final List<Veiculo> veiculos = new ArrayList<>();
 
@@ -31,6 +31,7 @@ public class VeiculoDAO {
         }
     }
 
+    // Adiciona veículo à lista e salva em TXT
     public void adicionar(Veiculo v) {
         veiculos.add(v);
         salvarEmTXT();
@@ -63,11 +64,15 @@ public class VeiculoDAO {
             String linha;
             StringBuilder bloco = new StringBuilder();
             boolean isInativo = false;
+
             while ((linha = br.readLine()) != null) {
                 bloco.append(linha).append("\n");
-                if (linha.startsWith("Status:") && linha.split(":", 2)[1].trim().equalsIgnoreCase("Inativo")) {
+
+                if (linha.startsWith("Status:") &&
+                    linha.split(":", 2)[1].trim().equalsIgnoreCase("Inativo")) {
                     isInativo = true;
                 }
+
                 if (linha.startsWith("========================================")) {
                     if (isInativo) sb.append(bloco).append("\n");
                     bloco.setLength(0);
@@ -93,9 +98,11 @@ public class VeiculoDAO {
                     blocoDoId = linha.equals("ID: " + id);
                     continue;
                 }
+
                 if (lendoBloco && blocoDoId && linha.startsWith("Status:")) {
                     return linha.split(":", 2)[1].trim();
                 }
+
                 if (linha.startsWith("========================================")) {
                     lendoBloco = false;
                     blocoDoId = false;
@@ -110,6 +117,7 @@ public class VeiculoDAO {
     // ALTERAR STATUS
     public boolean alterarStatusVeiculo(int id, String novoStatus) {
         File arquivo = new File(CAMINHO);
+
         try {
             List<String> linhas = Files.readAllLines(arquivo.toPath());
             List<String> novoConteudo = new ArrayList<>();
@@ -140,6 +148,7 @@ public class VeiculoDAO {
 
             Files.write(arquivo.toPath(), novoConteudo);
             return true;
+
         } catch (IOException e) {
             e.printStackTrace();
             return false;

@@ -10,11 +10,11 @@ import model.Movimentacao;
 public class MovimentacaoExcelDAO {
 
     private static final String CAMINHO =
-        System.getProperty("user.home") + File.separator +
-        "Documents" + File.separator +
-        "NetBeansProjects" + File.separator +
-        "gynlog" + File.separator +
-        "bancoVeiculos.xlsx";
+            System.getProperty("user.home") + File.separator +
+            "Documents" + File.separator +
+            "NetBeansProjects" + File.separator +
+            "gynlog" + File.separator +
+            "bancoVeiculos.xlsx";
 
     public void salvarMovExcel(Movimentacao mov) {
 
@@ -26,7 +26,7 @@ public class MovimentacaoExcelDAO {
 
             Sheet sheet = workbook.getSheet("Despesas");
 
-            // Se não existir, cria a aba + cabeçalho
+            // Cria aba "Despesas" com cabeçalho se não existir
             if (sheet == null) {
                 sheet = workbook.createSheet("Despesas");
 
@@ -39,14 +39,13 @@ public class MovimentacaoExcelDAO {
                 header.createCell(5).setCellValue("Valor");
             }
 
-            // Número de linhas reais, ignora buracos
+            // Número de linhas reais, ignorando possíveis buracos
             int rowNum = sheet.getPhysicalNumberOfRows();
 
-            // ID será a própria linha (começando da linha 1 porque header é 0)
+            // ID da despesa baseado na linha (linha 0 é o header)
             int idDespesa = rowNum;
 
             Row row = sheet.createRow(rowNum);
-
             row.createCell(0).setCellValue(idDespesa);
             row.createCell(1).setCellValue(mov.getIdVeiculo());
             row.createCell(2).setCellValue(mov.getIdTipoDespesa());

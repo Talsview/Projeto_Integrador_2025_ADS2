@@ -291,7 +291,7 @@ public class TelaVeiculo extends javax.swing.JFrame {
     }//GEN-LAST:event_btnEditarActionPerformed
 
     private void btnSalvarTXTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarTXTActionPerformed
-        try {
+    try {
     // Verificar campos vazios
     if (txtID.getText().trim().isEmpty() ||
         txtPlaca.getText().trim().isEmpty() ||
@@ -378,6 +378,7 @@ public class TelaVeiculo extends javax.swing.JFrame {
     String tipoFabricante = cbTipo.getSelectedItem().toString();
     String status = cbStatus.getSelectedItem().toString();
     String tipoVeiculo = cbTipoVeiculo.getSelectedItem().toString();
+
     if (tipoVeiculo.trim().isEmpty()) {
         JOptionPane.showMessageDialog(this, "Selecione o tipo de veículo!");
         return;
@@ -400,8 +401,6 @@ public class TelaVeiculo extends javax.swing.JFrame {
 } catch (Exception e) {
     JOptionPane.showMessageDialog(this, "Erro ao salvar: " + e.getMessage());
 }
-
-
     }//GEN-LAST:event_btnSalvarTXTActionPerformed
 
     /**

@@ -332,7 +332,7 @@ public class TelaDespesas extends javax.swing.JFrame {
         jLabel5.setText("Tipo de Despesa:");
 
         comboTipo.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
-        comboTipo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Combustível", "Manutenção", "IPVA", "Multa" }));
+        comboTipo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Combustível", "IPVA", "Multa" }));
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
@@ -450,7 +450,7 @@ public class TelaDespesas extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
-        try {
+    try {
     // ID obrigatório
     String idTexto = txtIdVeiculo.getText().trim();
     if (idTexto.isEmpty()) {
@@ -546,16 +546,12 @@ public class TelaDespesas extends javax.swing.JFrame {
 } catch (Exception ex) {
     JOptionPane.showMessageDialog(this, "Erro inesperado: " + ex.getMessage());
 }
-
-
     }//GEN-LAST:event_btnSalvarActionPerformed
 
     private void btnVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltarActionPerformed
         MainFrame mf = new MainFrame();
         mf.setVisible(true);
         this.dispose();
-        
-        
     }//GEN-LAST:event_btnVoltarActionPerformed
 
     /**

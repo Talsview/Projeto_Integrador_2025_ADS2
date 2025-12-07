@@ -2,23 +2,23 @@ package model;
 
 public class TipoDespesa {
 
-    private int id;
+    private int tipo;
     private String descricao;
 
     public TipoDespesa() {
     }
 
-    public TipoDespesa(int id, String descricao) {
-        this.id = id;
+    public TipoDespesa(int tipo, String descricao) {
+        this.tipo = tipo;
         this.descricao = descricao;
     }
 
     public int getId() {
-        return id;
+        return tipo;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setId(int tipo) {
+        this.tipo = tipo;
     }
 
     public String getDescricao() {

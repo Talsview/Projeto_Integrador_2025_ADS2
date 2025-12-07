@@ -243,7 +243,7 @@ public class TelaTrocarStatus extends javax.swing.JFrame {
     private void btnMostrarStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMostrarStatusActionPerformed
         String idTexto = txtId.getText().trim();
 
-    // validação: só números e não pode ser negativo / zero
+    // Validação: só números e não pode ser negativo / zero
     if (idTexto.isEmpty()) {
         JOptionPane.showMessageDialog(this, "Informe o ID do veículo.");
         return;
@@ -266,22 +266,22 @@ public class TelaTrocarStatus extends javax.swing.JFrame {
         return;
     }
 
-    // chamar o DAO corretamente (nome existente no seu DAO)
+    // Chamar o DAO corretamente
     dao.VeiculoDAO dao = new dao.VeiculoDAO();
     String status = dao.buscarStatusPorId(id); // usa o método que existe no DAO
 
     if (status == null) {
         JOptionPane.showMessageDialog(this, "Veículo não encontrado para o ID: " + id);
         lblStatusAtual.setText("Status atual: —");
-        // opcional: limpar combo
+        // Opcional: limpar combo
         // comboStatus.setSelectedIndex(-1);
     } else {
         lblStatusAtual.setText("Status atual: " + status);
-        // tenta selecionar no combo (assume itens "Ativo" e "Inativo")
+        // Tenta selecionar no combo (assume itens "Ativo" e "Inativo")
         try {
             comboStatus.setSelectedItem(status);
         } catch (Exception e) {
-            // se combo tiver outros valores, apenas ignore
+            // Se combo tiver outros valores, apenas ignore
         }
     }
 
@@ -289,7 +289,6 @@ public class TelaTrocarStatus extends javax.swing.JFrame {
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
         try {
-
     String idStr = txtId.getText().trim();
 
     // VALIDAR SE O ID É APENAS NÚMEROS
@@ -299,11 +298,9 @@ public class TelaTrocarStatus extends javax.swing.JFrame {
     }
 
     int id = Integer.parseInt(idStr);
-
     String novoStatus = comboStatus.getSelectedItem().toString();
 
     VeiculoDAO dao = new VeiculoDAO();
-
     boolean ok = dao.alterarStatusVeiculo(id, novoStatus);
 
     if (ok) {
@@ -321,7 +318,6 @@ public class TelaTrocarStatus extends javax.swing.JFrame {
     e.printStackTrace();
     JOptionPane.showMessageDialog(this, "Erro inesperado ao salvar status!");
 }
-
     }//GEN-LAST:event_btnSalvarActionPerformed
 
     private void btnVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltarActionPerformed
